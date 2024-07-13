@@ -16,8 +16,14 @@ export default function RootLayout({
 }) {
   return (
     <HonoReactProvider>
-      <html lang="en" className={`${GeistSans.variable}`}>
-        <body>{children}</body>
+      <html
+        lang="en"
+        className={`${GeistSans.variable}`}
+        suppressHydrationWarning
+      >
+        <body className="min-h-screen bg-background antialiased">
+          {children}
+        </body>
       </html>
     </HonoReactProvider>
   );
