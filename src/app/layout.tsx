@@ -21,9 +21,7 @@ export default function RootLayout({
         className={`${GeistSans.variable}`}
         suppressHydrationWarning
       >
-        <body className="min-h-screen bg-background antialiased">
-          {children}
-        </body>
+        <body className="bg-background antialiased">{children}</body>
       </html>
     </HonoReactProvider>
   );
