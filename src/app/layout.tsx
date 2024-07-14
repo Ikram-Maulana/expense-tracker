@@ -1,6 +1,6 @@
-import { HonoReactProvider } from "@/hono/react";
 import "@/styles/globals.css";
 
+import { HonoReactProvider } from "@/hono/react";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata = {
