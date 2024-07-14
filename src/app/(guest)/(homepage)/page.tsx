@@ -1,5 +1,12 @@
 import { getTotalSpent } from "@/actions/expenses";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
@@ -19,15 +26,17 @@ export default function HomePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main>
-        <h1>Total Spent</h1>
-        <p>The total amount you&apos;ve spent</p>
-        <div>
-          <Suspense fallback={<p>Total Spent ...</p>}>
+      <Card className="mx-auto mt-4 w-[350px]">
+        <CardHeader>
+          <CardTitle>Total Spent</CardTitle>
+          <CardDescription>The total amount you&apos;ve spent</CardDescription>
+        </CardHeader>
+        <CardContent aria-live="polite">
+          <Suspense fallback={"..."}>
             <TotalSpent />
           </Suspense>
-        </div>
-      </main>
+        </CardContent>
+      </Card>
     </HydrationBoundary>
   );
 }

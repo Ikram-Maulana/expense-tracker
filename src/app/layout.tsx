@@ -15,14 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <HonoReactProvider>
-      <html
-        lang="en"
-        className={`${GeistSans.variable}`}
-        suppressHydrationWarning
-      >
-        <body className="bg-background antialiased">{children}</body>
-      </html>
-    </HonoReactProvider>
+    <html
+      lang="en"
+      className={`${GeistSans.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="bg-background antialiased">
+        <HonoReactProvider>{children}</HonoReactProvider>
+      </body>
+    </html>
   );
 }
