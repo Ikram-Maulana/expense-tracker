@@ -1,4 +1,4 @@
-import { getTotalSpent } from "@/actions/expenses";
+import { getTotalSpent } from "@/actions";
 import {
   Card,
   CardContent,
