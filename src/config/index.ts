@@ -1,1 +1,1 @@
-export * from "@/config/nav";
+export * from "@/config/authenticated-nav";

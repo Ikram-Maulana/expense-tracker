@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/app/(authenticated)/dashboard/_components/navbar";
 import { type FC } from "react";
 
 interface GuestLayoutProps {
