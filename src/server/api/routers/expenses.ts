@@ -16,7 +16,7 @@ const expenseSchema = z.object({
   amount: z.number().int().positive(),
 });
 type Expense = z.infer<typeof expenseSchema>;
-const createExpenseSchema = expenseSchema.omit({ id: true });
+export const createExpenseSchema = expenseSchema.omit({ id: true });
 
 let fakeExpenses: Expense[] = [
   { id: 1, name: "Rent", amount: 1000 },
