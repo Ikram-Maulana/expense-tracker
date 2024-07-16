@@ -14,8 +14,6 @@ import {
 import { Suspense } from "react";
 import { TotalSpent } from "./_components/total-spent";
 
-export const runtime = "edge";
-
 export default function HomePage() {
   const queryClient = new QueryClient();
 
