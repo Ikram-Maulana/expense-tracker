@@ -27,37 +27,34 @@ export default function ExpensesPage() {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="mx-auto mt-4 max-w-3xl px-4">
-        <div className="flex flex-wrap items-center justify-between">
-          <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight">
-            All Expenses
-          </h1>
+    <div className="mx-auto mt-4 max-w-3xl px-4">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+          All Expenses
+        </h1>
 
-          <Button
-            className="bg-green-500 text-white hover:bg-green-600"
-            asChild
-          >
-            <Link href="/dashboard/expenses/new">Add Expense</Link>
-          </Button>
-        </div>
+        <Button className="bg-green-500 text-white hover:bg-green-600" asChild>
+          <Link href="/dashboard/expenses/new">Add Expense</Link>
+        </Button>
+      </div>
 
-        <Table className="mt-6">
-          <TableCaption>A list of all your expenses.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Id</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      <Table className="mt-6">
+        <TableCaption>A list of all your expenses.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Id</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <HydrationBoundary state={dehydrate(queryClient)}>
             <Suspense fallback={<AllExpensesSkeleton />}>
               <AllExpenses />
             </Suspense>
-          </TableBody>
-        </Table>
-      </div>
-    </HydrationBoundary>
+          </HydrationBoundary>
+        </TableBody>
+      </Table>
+    </div>
   );
 }

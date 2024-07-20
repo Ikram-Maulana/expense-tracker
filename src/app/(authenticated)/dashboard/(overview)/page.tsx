@@ -23,18 +23,18 @@ export default function HomePage() {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Card className="mx-auto mt-4 w-[350px]">
-        <CardHeader>
-          <CardTitle>Total Spent</CardTitle>
-          <CardDescription>The total amount you&apos;ve spent</CardDescription>
-        </CardHeader>
-        <CardContent aria-live="polite">
+    <Card className="mx-auto mt-4 w-[350px]">
+      <CardHeader>
+        <CardTitle>Total Spent</CardTitle>
+        <CardDescription>The total amount you&apos;ve spent</CardDescription>
+      </CardHeader>
+      <CardContent aria-live="polite">
+        <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={"..."}>
             <TotalSpent />
           </Suspense>
-        </CardContent>
-      </Card>
-    </HydrationBoundary>
+        </HydrationBoundary>
+      </CardContent>
+    </Card>
   );
 }
