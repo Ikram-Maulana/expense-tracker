@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
 import { HonoReactProvider } from "@/hono/react";
+import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-background antialiased">
-        <HonoReactProvider>{children}</HonoReactProvider>
+        <ClerkProvider>
+          <HonoReactProvider>{children}</HonoReactProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

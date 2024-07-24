@@ -7,6 +7,7 @@
 import { Hono } from "hono";
 import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { auth } from "@/hono/auth";
 
 const h = new Hono();
 
@@ -25,6 +26,7 @@ let fakeExpenses: Expense[] = [
 ];
 
 export const expensesRouter = h
+  .use(auth)
   .get("/", (c) => {
     return c.json({
       expenses: fakeExpenses,
