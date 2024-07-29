@@ -13,16 +13,13 @@ const h = new Hono();
 
 const expenseSchema = z.object({
   id: z.number(),
-  name: z.string(),
-  amount: z.number().int().positive(),
+  title: z.string(),
+  amount: z.string(),
 });
 type Expense = z.infer<typeof expenseSchema>;
-export const createExpenseSchema = expenseSchema.omit({ id: true });
-
-let fakeExpenses: Expense[] = [
-  { id: 1, name: "Rent", amount: 1000 },
-  { id: 2, name: "Groceries", amount: 200 },
-  { id: 3, name: "Utilities", amount: 150 },
+  { id: 1, title: "Rent", amount: "1000" },
+  { id: 2, title: "Groceries", amount: "200" },
+  { id: 3, title: "Utilities", amount: "150" },
 ];
 
 export const expensesRouter = h

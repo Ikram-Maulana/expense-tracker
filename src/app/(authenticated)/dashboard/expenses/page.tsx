@@ -43,7 +43,7 @@ export default function ExpensesPage() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Id</TableHead>
-            <TableHead>Name</TableHead>
+            <TableHead>Title</TableHead>
             <TableHead className="text-right">Amount</TableHead>
           </TableRow>
         </TableHeader>

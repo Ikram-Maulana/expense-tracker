@@ -20,8 +20,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Name must be at least 3 characters",
+  title: z.string().min(3, {
+    message: "Title must be at least 3 characters",
   }),
   amount: z
     .string()
@@ -38,7 +38,7 @@ export const NewExpenseForm: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      title: "",
       amount: 0,
     },
   });
@@ -72,12 +72,12 @@ export const NewExpenseForm: FC = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="name"
+          name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Expense Name" {...field} />
+                <Input placeholder="Expense Title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

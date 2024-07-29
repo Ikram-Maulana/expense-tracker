@@ -15,10 +15,10 @@ export const AllExpenses: FC = () => {
     throw error;
   }
 
-  return data.map((expense) => (
+  return data.map((expense, idx) => (
     <TableRow key={expense.id}>
-      <TableCell className="font-medium">{expense.id}</TableCell>
-      <TableCell>{expense.name}</TableCell>
+      <TableCell className="font-medium">{idx + 1}</TableCell>
+      <TableCell>{expense.title}</TableCell>
       <TableCell className="text-right">{expense.amount}</TableCell>
     </TableRow>
   ));
