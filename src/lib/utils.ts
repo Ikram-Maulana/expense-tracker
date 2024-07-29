@@ -29,6 +29,9 @@ export function isValidPrecisionAndScale(value: number): boolean {
  */
 export function formatAmount(value: number): string {
   const [, decimalPart] = value.toString().split(".");
+  if (!decimalPart) {
+    return `${value}.00`;
+  }
   if (decimalPart && decimalPart.length === 1) {
     return `${value}0`;
   }

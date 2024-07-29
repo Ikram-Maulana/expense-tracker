@@ -4,10 +4,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
+import { auth } from "@/hono/auth";
+import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
+import { db } from "@/server/db";
+import { expenses as expensesTable } from "@/server/db/schema";
+import { zValidator } from "@hono/zod-validator";
+import { and, desc, eq, sql, sum } from "drizzle-orm";
 import { Hono } from "hono";
 import * as z from "zod";
-import { zValidator } from "@hono/zod-validator";
-import { auth } from "@/hono/auth";
 
 const h = new Hono();
 
@@ -16,31 +20,78 @@ const expenseSchema = z.object({
   title: z.string(),
   amount: z.string(),
 });
-type Expense = z.infer<typeof expenseSchema>;
-  { id: 1, title: "Rent", amount: "1000" },
-  { id: 2, title: "Groceries", amount: "200" },
-  { id: 3, title: "Utilities", amount: "150" },
-];
+export const createExpenseSchema = expenseSchema.omit({ id: true }).extend({
+  amount: z
+    .string()
+    .transform((v) => Number(v))
+    .refine((v) => !Number.isNaN(v), { message: "Amount must be a number" })
+    .refine((v) => v >= 0, {
+      message: "Amount must be greater than or equal to 0",
+    })
+    .refine((v) => isValidPrecisionAndScale(v), {
+      message:
+        "Amount must have a precision of 12 or less and scale of 2 or less",
+    })
+    .transform((v) => formatAmount(v)),
+});
 
 export const expensesRouter = h
   .use(auth)
-  .get("/", (c) => {
+  .get("/", async (c) => {
+    const user = c.var.user;
+
+    const expensesPrepared = db
+      .select()
+      .from(expensesTable)
+      .where(eq(expensesTable.userId, user.id))
+      .limit(100)
+      .orderBy(desc(expensesTable.createdAt))
+      .prepare();
+    const expenses = await expensesPrepared.all();
+
     return c.json({
-      expenses: fakeExpenses,
+      expenses,
     });
   })
   .get("/total-spent", async (c) => {
-    const total = fakeExpenses.reduce((acc, e) => acc + e.amount, 0);
+    const user = c.var.user;
+
+    const totalSpentPrepare = db
+      .select({ total: sum(expensesTable.amount) })
+      .from(expensesTable)
+      .where(eq(expensesTable.userId, sql.placeholder("userId")))
+      .limit(1)
+      .prepare();
+    const result = await totalSpentPrepare.all({ userId: user.id });
+    const total = Number(result[0]?.total) ?? 0;
+    const formattedTotal = formatAmount(total);
+
     return c.json({
-      total,
+      total: formattedTotal,
     });
   })
-  .get("/:id{[0-9]+}", (c) => {
-    const id = Number.parseInt(c.req.param("id"));
-    const expense = fakeExpenses.find((e) => e.id === id);
+  .get("/:id{[0-9a-z-]+}", async (c) => {
+    const id = c.req.param("id");
+    const user = c.var.user;
+
+    const expensePrepared = db
+      .select()
+      .from(expensesTable)
+      .where(
+        and(
+          eq(expensesTable.id, sql.placeholder("id")),
+          eq(expensesTable.userId, sql.placeholder("userId")),
+        ),
+      )
+      .prepare();
+    const expense = await expensePrepared
+      .all({ id, userId: user.id })
+      .then((r) => r[0]);
+
     if (!expense) {
       return c.notFound();
     }
+
     return c.json(expense);
   })
   .post(
@@ -50,26 +101,51 @@ export const expensesRouter = h
         return c.json({ message: "Invalid input" }, 400);
       }
     }),
-    (c) => {
+    async (c) => {
       const expense = c.req.valid("json");
-      const id = fakeExpenses.length + 1;
-      const newExpense = { ...expense, id };
-      fakeExpenses = [...fakeExpenses, newExpense];
-      return c.json({
-        message: "Expense created",
-        expense: newExpense,
-      });
+      const user = c.var.user;
+
+      const newExpensePrepare = db
+        .insert(expensesTable)
+        .values({
+          ...expense,
+          userId: sql.placeholder("userId"),
+        })
+        .returning()
+        .prepare();
+      const newExpense = await newExpensePrepare.all({ userId: user.id });
+
+      return c.json(
+        {
+          expense: newExpense,
+        },
+        201,
+      );
     },
   )
-  .delete("/:id{[0-9]+}", (c) => {
+  .delete("/:id{[0-9]+}", async (c) => {
     const id = Number.parseInt(c.req.param("id"));
-    const expense = fakeExpenses.findIndex((e) => e.id === id);
-    if (expense === -1) {
+    const user = c.var.user;
+
+    const deleteExpensePrepare = db
+      .delete(expensesTable)
+      .where(
+        and(
+          eq(expensesTable.id, sql.placeholder("id")),
+          eq(expensesTable.userId, sql.placeholder("userId")),
+        ),
+      )
+      .returning()
+      .prepare();
+    const deletedExpense = await deleteExpensePrepare
+      .all({ id, userId: user.id })
+      .then((r) => r[0]);
+
+    if (!deletedExpense) {
       return c.notFound();
     }
-    const deletedExpense = fakeExpenses.splice(expense, 1)[0];
+
     return c.json({
-      message: "Expense deleted",
       expense: deletedExpense,
     });
   });
