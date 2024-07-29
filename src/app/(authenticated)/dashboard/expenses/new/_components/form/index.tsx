@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconLoader } from "@irsyadadl/paranoid";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -26,12 +27,15 @@ const formSchema = z.object({
   amount: z
     .string()
     .transform((v) => Number(v))
-    .refine((v) => !Number.isNaN(v), {
-      message: "Amount must be a number",
-    })
+    .refine((v) => !Number.isNaN(v), { message: "Amount must be a number" })
     .refine((v) => v >= 0, {
       message: "Amount must be greater than or equal to 0",
-    }),
+    })
+    .refine((v) => isValidPrecisionAndScale(v), {
+      message:
+        "Amount must have a precision of 12 or less and scale of 2 or less",
+    })
+    .transform((v) => formatAmount(v)),
 });
 
 export const NewExpenseForm: FC = () => {
@@ -39,7 +43,7 @@ export const NewExpenseForm: FC = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      amount: 0,
+      amount: "0",
     },
   });
   const utils = useQueryClient();
@@ -91,7 +95,7 @@ export const NewExpenseForm: FC = () => {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" min={0} {...field} />
+                <Input placeholder="0" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
