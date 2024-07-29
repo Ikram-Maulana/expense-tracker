@@ -47,3 +47,8 @@ yarn-error.log*
 
 # Cache
 cache
+
+# local database
+*.db
+*.db-shm
+*.db-wal

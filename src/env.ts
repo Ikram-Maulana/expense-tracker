@@ -7,7 +7,15 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    DATABASE_URL: z
+      .string()
+      .url()
+      .refine((str) => str !== "", "Please provide a database URL"),
+    DATABASE_AUTH_TOKEN: z.string().optional(),
     CLERK_SECRET_KEY: z.string(),
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
   },
 
   /**
