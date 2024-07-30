@@ -1,5 +1,5 @@
 import { api } from "@/server/api/hono";
-import { type createExpenseSchema } from "@/server/api/routers/expenses";
+import { type createExpenseSchema } from "@/types";
 import type * as z from "zod";
 
 export const getAllExpenses = async () => {

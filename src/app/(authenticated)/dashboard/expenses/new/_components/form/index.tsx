@@ -11,36 +11,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
+import { createExpenseSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconLoader } from "@irsyadadl/paranoid";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const formSchema = z.object({
-  title: z.string().min(3, {
-    message: "Title must be at least 3 characters",
-  }),
-  amount: z
-    .string()
-    .transform((v) => Number(v))
-    .refine((v) => !Number.isNaN(v), { message: "Amount must be a number" })
-    .refine((v) => v >= 0, {
-      message: "Amount must be greater than or equal to 0",
-    })
-    .refine((v) => isValidPrecisionAndScale(v), {
-      message:
-        "Amount must have a precision of 12 or less and scale of 2 or less",
-    })
-    .transform((v) => formatAmount(v)),
-});
+import type * as z from "zod";
 
 export const NewExpenseForm: FC = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof createExpenseSchema>>({
+    resolver: zodResolver(createExpenseSchema),
     defaultValues: {
       title: "",
       amount: "0",
@@ -61,7 +43,7 @@ export const NewExpenseForm: FC = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof createExpenseSchema>) {
     if (isPending) return;
 
     try {

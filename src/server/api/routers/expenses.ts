@@ -1,39 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { auth } from "@/hono/auth";
-import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
+import { formatAmount } from "@/lib/utils";
 import { db } from "@/server/db";
 import { expenses as expensesTable } from "@/server/db/schema";
+import { createExpenseSchema } from "@/types";
 import { zValidator } from "@hono/zod-validator";
 import { and, desc, eq, sql, sum } from "drizzle-orm";
 import { Hono } from "hono";
-import * as z from "zod";
 
 const h = new Hono();
-
-const expenseSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  amount: z.string(),
-});
-export const createExpenseSchema = expenseSchema.omit({ id: true }).extend({
-  amount: z
-    .string()
-    .transform((v) => Number(v))
-    .refine((v) => !Number.isNaN(v), { message: "Amount must be a number" })
-    .refine((v) => v >= 0, {
-      message: "Amount must be greater than or equal to 0",
-    })
-    .refine((v) => isValidPrecisionAndScale(v), {
-      message:
-        "Amount must have a precision of 12 or less and scale of 2 or less",
-    })
-    .transform((v) => formatAmount(v)),
-});
 
 export const expensesRouter = h
   .use(auth)
