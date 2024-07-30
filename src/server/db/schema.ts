@@ -1,9 +1,12 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
+import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
 import { sql } from "drizzle-orm";
 import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { v7 as uuidv7 } from "uuid";
+import * as z from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -33,3 +36,20 @@ export const expenses = createTable(
     userIdIndex: index("user_id_idx").on(expenses.userId),
   }),
 );
+export const insertExpenseSchema = createInsertSchema(expenses, {
+  title: z.string().min(3, {
+    message: "Title must be at least 3 characters",
+  }),
+  amount: z
+    .string()
+    .transform((v) => Number(v))
+    .refine((v) => !Number.isNaN(v), { message: "Amount must be a number" })
+    .refine((v) => v >= 0, {
+      message: "Amount must be greater than or equal to 0",
+    })
+    .refine((v) => isValidPrecisionAndScale(v), {
+      message: "Amount must be a valid monetary value",
+    })
+    .transform((v) => formatAmount(v)),
+});
+export const selectExpenseSchema = createSelectSchema(expenses);

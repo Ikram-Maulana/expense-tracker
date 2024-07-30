@@ -1,7 +1,10 @@
 import { auth } from "@/hono/auth";
 import { formatAmount } from "@/lib/utils";
 import { db } from "@/server/db";
-import { expenses as expensesTable } from "@/server/db/schema";
+import {
+  expenses as expensesTable,
+  insertExpenseSchema,
+} from "@/server/db/schema";
 import { createExpenseSchema } from "@/types";
 import { zValidator } from "@hono/zod-validator";
 import { and, desc, eq, sql, sum } from "drizzle-orm";
@@ -79,15 +82,17 @@ export const expensesRouter = h
       const expense = c.req.valid("json");
       const user = c.var.user;
 
+      const validatedExpense = insertExpenseSchema.parse({
+        ...expense,
+        userId: user.id,
+      });
+
       const newExpensePrepare = db
         .insert(expensesTable)
-        .values({
-          ...expense,
-          userId: sql.placeholder("userId"),
-        })
+        .values(validatedExpense)
         .returning()
         .prepare();
-      const newExpense = await newExpensePrepare.all({ userId: user.id });
+      const newExpense = await newExpensePrepare.all();
 
       return c.json(
         {
