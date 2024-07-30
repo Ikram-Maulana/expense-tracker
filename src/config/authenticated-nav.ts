@@ -1,6 +1,6 @@
 export const authenticatedNav = [
   {
-    title: "Home",
+    title: "Overview",
     href: "/dashboard",
   },
   {

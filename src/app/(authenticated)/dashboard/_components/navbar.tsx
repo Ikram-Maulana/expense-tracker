@@ -11,8 +11,8 @@ export const Navbar: FC = () => {
   const pathname = usePathname();
 
   return (
-    <header className="container flex justify-between">
-      <div className="flex gap-2 p-2">
+    <header className="container flex max-w-3xl justify-between p-4">
+      <div className="flex gap-2">
         <Link
           href={authenticatedNav[0]?.href ?? ""}
           className={pathname === "/dashboard" ? "font-bold" : ""}
