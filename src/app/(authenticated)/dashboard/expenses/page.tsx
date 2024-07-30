@@ -45,6 +45,7 @@ export default function ExpensesPage() {
             <TableHead className="w-[100px]">Id</TableHead>
             <TableHead>Title</TableHead>
             <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

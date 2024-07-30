@@ -25,6 +25,7 @@ export const expenses = createTable(
     userId: text("user_id").notNull(),
     title: text("title").notNull(),
     amount: text("amount").notNull(),
+    date: text("date").notNull(),
     createdAt: int("created_at", { mode: "timestamp" })
       .default(sql`(unixepoch())`)
       .notNull(),
@@ -51,5 +52,8 @@ export const insertExpenseSchema = createInsertSchema(expenses, {
       message: "Amount must be a valid monetary value",
     })
     .transform((v) => formatAmount(v)),
+  date: z
+    .string()
+    .refine((v) => !isNaN(Date.parse(v)), { message: "Invalid date format" }),
 });
 export const selectExpenseSchema = createSelectSchema(expenses);
