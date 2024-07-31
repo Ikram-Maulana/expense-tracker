@@ -102,8 +102,8 @@ export const expensesRouter = h
       );
     },
   )
-  .delete("/:id{[0-9]+}", async (c) => {
-    const id = Number.parseInt(c.req.param("id"));
+  .delete("/:id{[0-9a-z-]+}", async (c) => {
+    const id = c.req.param("id");
     const user = c.var.user;
 
     const deleteExpensePrepare = db
