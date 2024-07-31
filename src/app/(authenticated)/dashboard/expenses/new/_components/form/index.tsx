@@ -64,16 +64,12 @@ export const NewExpenseForm: FC = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (isPending) return;
 
-    try {
-      const formData = {
-        ...values,
-        date: values.date.toISOString(),
-      };
-      mutate(formData);
-      router.push("/dashboard/expenses");
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : error);
-    }
+    const formData = {
+      ...values,
+      date: values.date.toISOString(),
+    };
+    mutate(formData);
+    router.push("/dashboard/expenses");
   }
 
   return (

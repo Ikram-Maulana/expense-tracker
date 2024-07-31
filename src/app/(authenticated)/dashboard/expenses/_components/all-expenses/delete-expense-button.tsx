@@ -36,11 +36,7 @@ export const DeleteExpenseButton = async ({ id }: { id: string }) => {
   const handleDelete = (id: string) => {
     if (isPending) return;
 
-    try {
-      mutate(id);
-    } catch (error) {
-      console.error(error instanceof Error ? error.message : error);
-    }
+    mutate(id);
   };
 
   return (
