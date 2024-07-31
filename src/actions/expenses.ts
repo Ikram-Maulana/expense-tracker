@@ -29,3 +29,14 @@ export const newExpense = async (expense: NewExpenseProps) => {
   const data = await response.json();
   return data.expense;
 };
+
+export const deleteExpense = async (id: string) => {
+  const response = await api.expenses[":id{[0-9a-z-]+}"].$delete({
+    param: { id },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete expense");
+  }
+  const data = await response.json();
+  return data;
+};

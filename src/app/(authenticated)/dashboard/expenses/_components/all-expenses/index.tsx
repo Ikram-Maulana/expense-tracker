@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllExpenses } from "@/actions";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatToLocaleDate } from "@/lib/utils";
 import { type expenses } from "@/server/db/schema";
@@ -12,6 +13,7 @@ import {
 import { type InferSelectModel } from "drizzle-orm";
 import { type FC } from "react";
 import { newExpenseKey } from "../../new/_components/form";
+import { DeleteExpenseButton } from "./delete-expense-button";
 
 type ExpensePendingProps = InferSelectModel<typeof expenses>;
 
@@ -29,6 +31,14 @@ export const AllExpenses: FC = () => {
     select: (mutation) => mutation.state.variables as ExpensePendingProps,
   });
 
+  const deletedExpense = useMutationState({
+    filters: { mutationKey: ["delete-expense"], status: "pending" },
+    select: (mutation) => mutation.state.variables as string,
+  });
+  const filteredData = data.filter(
+    (expense) => !deletedExpense.some((id) => id === expense.id),
+  );
+
   if (error) {
     throw error;
   }
@@ -43,15 +53,24 @@ export const AllExpenses: FC = () => {
               <TableCell className="text-right">
                 {formatToLocaleDate(new Date(expense.date), "YYYY-MM-DD")}
               </TableCell>
+              <TableCell>
+                <Skeleton className="h-4" />
+              </TableCell>
             </TableRow>
           ))
         : null}
-      {data.map((expense, idx) => (
-        <TableRow key={`expense-${idx}`}>
+      {filteredData.map((expense) => (
+        <TableRow key={`expense-${expense.id}`}>
           <TableCell>{expense.title}</TableCell>
           <TableCell className="text-right">{expense.amount}</TableCell>
           <TableCell className="text-right">
             {formatToLocaleDate(new Date(expense.date), "YYYY-MM-DD")}
+          </TableCell>
+          <TableCell className="text-right">
+            <DeleteExpenseButton
+              id={expense.id}
+              key={`delete-expense-${expense.id}`}
+            />
           </TableCell>
         </TableRow>
       ))}

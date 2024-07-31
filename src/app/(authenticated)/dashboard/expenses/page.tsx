@@ -45,6 +45,7 @@ export default function ExpensesPage() {
             <TableHead>Title</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead className="text-right">Date</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
