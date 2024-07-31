@@ -27,7 +27,7 @@ export default function ExpensesPage() {
   });
 
   return (
-    <div className="mx-auto mt-4 max-w-3xl px-4">
+    <div className="mx-auto my-4 max-w-3xl px-4">
       <div className="flex flex-wrap items-center justify-between">
         <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight">
           All Expenses
@@ -42,7 +42,6 @@ export default function ExpensesPage() {
         <TableCaption>A list of all your expenses.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Id</TableHead>
             <TableHead>Title</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead className="text-right">Date</TableHead>

@@ -28,6 +28,7 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+export const newExpenseKey = ["new-expense"];
 const formSchema = createExpenseSchema.extend({
   date: z.date(),
 });
@@ -45,6 +46,7 @@ export const NewExpenseForm: FC = () => {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
+    mutationKey: newExpenseKey,
     mutationFn: newExpense,
     onSuccess: async () => {
       form.reset();
@@ -94,7 +96,7 @@ export const NewExpenseForm: FC = () => {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input placeholder="0" {...field} />
+                <Input placeholder="0" inputMode="numeric" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
