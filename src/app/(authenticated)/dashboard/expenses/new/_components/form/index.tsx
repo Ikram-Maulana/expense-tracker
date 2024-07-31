@@ -26,6 +26,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 export const newExpenseKey = ["new-expense"];
@@ -51,10 +52,12 @@ export const NewExpenseForm: FC = () => {
     onSuccess: async () => {
       form.reset();
       await utils.invalidateQueries();
-      router.push("/dashboard/expenses");
+      toast.success("Expense added successfully!");
     },
     onError: (error) => {
-      console.error(error instanceof Error ? error.message : error);
+      toast.error(
+        error instanceof Error ? error.message : "Internal Server Error",
+      );
     },
   });
 
@@ -67,6 +70,7 @@ export const NewExpenseForm: FC = () => {
         date: values.date.toISOString(),
       };
       mutate(formData);
+      router.push("/dashboard/expenses");
     } catch (error) {
       console.error(error instanceof Error ? error.message : error);
     }

@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 
+import { Toaster } from "@/components/ui/sonner";
 import { HonoReactProvider } from "@/hono/react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
@@ -24,6 +25,13 @@ export default function RootLayout({
       <body className="bg-background antialiased">
         <ClerkProvider>
           <HonoReactProvider>{children}</HonoReactProvider>
+
+          <div className="lg:hidden">
+            <Toaster richColors position="bottom-center" duration={5000} />
+          </div>
+          <div className="hidden lg:flex">
+            <Toaster richColors position="top-center" duration={5000} />
+          </div>
         </ClerkProvider>
       </body>
     </html>
