@@ -13,6 +13,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const isPublicRoute = createRouteMatcher(publicRoutes);
 const isAuthRoute = createRouteMatcher(authRoutes);
 const isAPIRoute = createRouteMatcher(apiRoutes);
+const whitelistASN = ["15169"];
 
 const aj = arcjet({
   key: env.ARCJET_KEY,
@@ -28,8 +29,14 @@ const aj = arcjet({
 });
 
 export const middleware = async (req: NextRequest) => {
-  const decision = await aj.protect(req);
+  // Allow whitelisted ASN
+  const asn = req.headers.get("x-vercel-ip-as-number") ?? "";
+  if (whitelistASN.includes(asn)) {
+    return NextResponse.next();
+  }
 
+  // Protect from bots and other threats
+  const decision = await aj.protect(req);
   if (decision.isDenied()) {
     const { reason } = decision;
 
@@ -44,6 +51,7 @@ export const middleware = async (req: NextRequest) => {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  // Custom logic for public, auth, and api routes
   if (isAPIRoute(req)) return NextResponse.next();
 
   const { nextUrl } = req;
