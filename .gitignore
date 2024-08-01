@@ -44,3 +44,11 @@ yarn-error.log*
 
 # idea files
 .idea
+
+# Cache
+cache
+
+# local database
+*.db
+*.db-shm
+*.db-wal

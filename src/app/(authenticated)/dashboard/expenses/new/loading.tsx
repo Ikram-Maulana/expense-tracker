@@ -1,0 +1,24 @@
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { type FC } from "react";
+
+const Loading: FC = () => {
+  return (
+    <div className="mx-auto mt-4 max-w-3xl px-4">
+      <div className="flex flex-wrap items-center justify-between">
+        <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+          New Expense
+        </h1>
+
+        <Button asChild>
+          <Link href="/dashboard/expenses">Go Back</Link>
+        </Button>
+      </div>
+
+      <Skeleton className="mx-auto mt-6 h-[242px] w-full max-w-3xl px-4" />
+    </div>
+  );
+};
+
+export default Loading;
