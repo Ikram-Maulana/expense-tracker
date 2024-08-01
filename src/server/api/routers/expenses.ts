@@ -20,7 +20,7 @@ export const expensesRouter = h
     const expensesPrepared = db
       .select()
       .from(expensesTable)
-      .where(eq(expensesTable.userId, user.id!))
+      .where(eq(expensesTable.userId, String(user.id)))
       .limit(100)
       .orderBy(desc(expensesTable.createdAt))
       .prepare();
@@ -39,7 +39,7 @@ export const expensesRouter = h
       .where(eq(expensesTable.userId, sql.placeholder("userId")))
       .limit(1)
       .prepare();
-    const result = await totalSpentPrepare.all({ userId: user.id });
+    const result = await totalSpentPrepare.all({ userId: String(user.id) });
     const total = Number(result[0]?.total) ?? 0;
     const formattedTotal = formatAmount(total);
 
@@ -62,7 +62,7 @@ export const expensesRouter = h
       )
       .prepare();
     const expense = await expensePrepared
-      .all({ id, userId: user.id })
+      .all({ id, userId: String(user.id) })
       .then((r) => r[0]);
 
     if (!expense) {
@@ -84,7 +84,7 @@ export const expensesRouter = h
 
       const validatedExpense = insertExpenseSchema.parse({
         ...expense,
-        userId: user.id,
+        userId: String(user.id),
       });
 
       const newExpensePrepare = db
@@ -117,7 +117,7 @@ export const expensesRouter = h
       .returning()
       .prepare();
     const deletedExpense = await deleteExpensePrepare
-      .all({ id, userId: user.id })
+      .all({ id, userId: String(user.id) })
       .then((r) => r[0]);
 
     if (!deletedExpense) {
