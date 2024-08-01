@@ -15,6 +15,10 @@ const HomePage: FC = async () => {
   return (
     <div className="container flex h-screen flex-col items-center justify-center">
       <div className="mx-auto max-w-2xl space-y-5 text-center">
+        <Button variant="outline" className="cursor-default rounded-full">
+          🎓 Educational Project
+        </Button>
+
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Track and manage your expenses with ease
         </h1>
@@ -33,7 +37,7 @@ const HomePage: FC = async () => {
               <Link href="/auth/login">Login</Link>
             </Button>
           )}
-          <Button variant="outline" asChild>
+          <Button variant="secondary" asChild>
             <a href="https://github.com/Ikram-Maulana/expense-tracker">
               <IconBrandGithub className="mr-2 h-4 w-4" />
               View Github Repository
