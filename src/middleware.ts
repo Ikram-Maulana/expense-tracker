@@ -30,10 +30,17 @@ const aj = arcjet({
 export const middleware = async (req: NextRequest) => {
   const decision = await aj.protect(req);
 
-  if (
-    decision.isDenied() &&
-    (decision.reason.isBot() || decision.reason.isShield())
-  ) {
+  if (decision.isDenied()) {
+    const { reason } = decision;
+
+    if (reason.isBot()) {
+      const { botType } = reason;
+
+      if (botType === "VERIFIED_BOT" || botType === "LIKELY_NOT_A_BOT") {
+        return NextResponse.next();
+      }
+    }
+
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
