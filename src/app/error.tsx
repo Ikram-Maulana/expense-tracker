@@ -2,7 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { type Metadata } from "next";
 import { type FC } from "react";
+
+export const metadata: Metadata = {
+  title: "Internal Server Error | Expense Tracker",
+};
 
 interface ErrorProps {
   error: Error & { digest?: string };

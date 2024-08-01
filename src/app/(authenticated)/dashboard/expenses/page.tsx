@@ -1,4 +1,5 @@
 import { getAllExpenses } from "@/actions";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -12,11 +13,15 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { type Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { AllExpenses } from "./_components/all-expenses";
 import AllExpensesSkeleton from "./_components/all-expenses/skeleton";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Expenses | Expense Tracker",
+};
 
 export default function ExpensesPage() {
   const queryClient = new QueryClient();

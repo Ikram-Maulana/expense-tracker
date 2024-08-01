@@ -3,6 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { GeistSans } from "geist/font/sans";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Internal Server Error | Expense Tracker",
+};
 
 export default function GlobalError({
   error,

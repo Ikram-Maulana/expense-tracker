@@ -11,10 +11,15 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { type Metadata } from "next";
 import { Suspense } from "react";
 import { TotalSpent } from "./_components/total-spent";
 
-export default function HomePage() {
+export const metadata: Metadata = {
+  title: "Overview | Expense Tracker",
+};
+
+export default function OverviewPage() {
   const queryClient = new QueryClient();
 
   void queryClient.prefetchQuery({

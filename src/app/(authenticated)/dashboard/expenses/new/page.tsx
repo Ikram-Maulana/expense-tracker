@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { type Metadata } from "next";
 import Link from "next/link";
 import { type FC } from "react";
 import { NewExpenseForm } from "./_components/form";
-import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "New Expense | Expense Tracker",
+};
 
 const AddExpensePage: FC = () => {
   return (
