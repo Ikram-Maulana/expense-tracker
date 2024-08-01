@@ -3,11 +3,11 @@ import { type FC } from "react";
 
 export const runtime = "edge";
 
-interface GuestLayoutProps {
+interface AuthenticatedLayoutProps {
   children: React.ReactNode;
 }
 
-const GuestLayout: FC<GuestLayoutProps> = ({ children }) => {
+const AuthenticatedLayout: FC<AuthenticatedLayoutProps> = ({ children }) => {
   return (
     <>
       <Navbar />
@@ -17,4 +17,4 @@ const GuestLayout: FC<GuestLayoutProps> = ({ children }) => {
   );
 };
 
-export default GuestLayout;
+export default AuthenticatedLayout;

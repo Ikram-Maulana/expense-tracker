@@ -3,8 +3,16 @@
 
 import { formatAmount, isValidPrecisionAndScale } from "@/lib/utils";
 import { sql } from "drizzle-orm";
-import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  int,
+  integer,
+  primaryKey,
+  sqliteTableCreator,
+  text,
+} from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { AdapterAccountType } from "next-auth/adapters";
 import { v7 as uuidv7 } from "uuid";
 import * as z from "zod";
 
@@ -57,3 +65,35 @@ export const insertExpenseSchema = createInsertSchema(expenses, {
     .refine((v) => !isNaN(Date.parse(v)), { message: "Invalid date format" }),
 });
 export const selectExpenseSchema = createSelectSchema(expenses);
+
+export const users = createTable("user", {
+  id: text("id").primaryKey().$defaultFn(uuidv7),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
+});
+
+export const accounts = createTable(
+  "account",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  }),
+);

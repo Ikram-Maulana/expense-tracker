@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
 import { HonoReactProvider } from "@/hono/react";
-import { ClerkProvider } from "@clerk/nextjs";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata = {
@@ -23,16 +22,14 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-background antialiased">
-        <ClerkProvider>
-          <HonoReactProvider>{children}</HonoReactProvider>
+        <HonoReactProvider>{children}</HonoReactProvider>
 
-          <div className="lg:hidden">
-            <Toaster richColors position="bottom-center" duration={5000} />
-          </div>
-          <div className="hidden lg:flex">
-            <Toaster richColors position="top-center" duration={5000} />
-          </div>
-        </ClerkProvider>
+        <div className="lg:hidden">
+          <Toaster richColors position="bottom-center" duration={5000} />
+        </div>
+        <div className="hidden lg:flex">
+          <Toaster richColors position="top-center" duration={5000} />
+        </div>
       </body>
     </html>
   );

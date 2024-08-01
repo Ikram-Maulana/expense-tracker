@@ -1,4 +1,4 @@
-import { auth } from "@/hono/auth";
+import { honoAuth } from "@/hono/hono-auth";
 import { formatAmount } from "@/lib/utils";
 import { db } from "@/server/db";
 import {
@@ -13,14 +13,14 @@ import { Hono } from "hono";
 const h = new Hono();
 
 export const expensesRouter = h
-  .use(auth)
+  .use(honoAuth)
   .get("/", async (c) => {
     const user = c.var.user;
 
     const expensesPrepared = db
       .select()
       .from(expensesTable)
-      .where(eq(expensesTable.userId, user.id))
+      .where(eq(expensesTable.userId, user.id!))
       .limit(100)
       .orderBy(desc(expensesTable.createdAt))
       .prepare();
