@@ -14,6 +14,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@arcjet/next": "^1.0.0-alpha.20",
     "@auth/drizzle-adapter": "^1.4.2",
     "@hono/zod-validator": "^0.2.2",
     "@hookform/resolvers": "^3.9.0",
@@ -43,6 +44,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
+    "sharp": "^0.33.4",
     "sonner": "^1.5.0",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.4.0",

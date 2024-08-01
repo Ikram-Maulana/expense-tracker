@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { auth } from "@/lib/auth";
 import { createRouteMatcher } from "@/lib/route-matcher";
 import {
@@ -6,13 +7,36 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from "@/routes";
+import arcjet, { detectBot, shield } from "@arcjet/next";
 import { NextResponse, type NextRequest } from "next/server";
 
 const isPublicRoute = createRouteMatcher(publicRoutes);
 const isAuthRoute = createRouteMatcher(authRoutes);
 const isAPIRoute = createRouteMatcher(apiRoutes);
 
+const aj = arcjet({
+  key: env.ARCJET_KEY,
+  rules: [
+    shield({
+      mode: "LIVE",
+    }),
+    detectBot({
+      mode: "LIVE",
+      block: ["AUTOMATED"],
+    }),
+  ],
+});
+
 export const middleware = async (req: NextRequest) => {
+  const decision = await aj.protect(req);
+
+  if (
+    decision.isDenied() &&
+    (decision.reason.isBot() || decision.reason.isShield())
+  ) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   if (isAPIRoute(req)) return NextResponse.next();
 
   const { nextUrl } = req;
