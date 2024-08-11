@@ -13,8 +13,6 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { type Metadata } from "next";
 import Image from "next/image";
 
-export const runtime = "edge";
-
 export const metadata: Metadata = {
   title: "Auth Error | Expense Tracker",
 };

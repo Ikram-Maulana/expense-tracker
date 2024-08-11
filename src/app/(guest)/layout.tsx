@@ -1,7 +1,5 @@
 import { type FC } from "react";
 
-export const runtime = "edge";
-
 interface GuestLayoutProps {
   children: React.ReactNode;
   modal: React.ReactNode;
