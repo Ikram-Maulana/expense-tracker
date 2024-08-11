@@ -13,7 +13,6 @@ import { NextResponse, type NextRequest } from "next/server";
 const isPublicRoute = createRouteMatcher(publicRoutes);
 const isAuthRoute = createRouteMatcher(authRoutes);
 const isAPIRoute = createRouteMatcher(apiRoutes);
-const whitelistASN = ["15169"];
 
 const aj = arcjet({
   key: env.ARCJET_KEY,
@@ -24,17 +23,26 @@ const aj = arcjet({
     detectBot({
       mode: "LIVE",
       block: ["AUTOMATED"],
+      patterns: {
+        remove: [
+          // Vercel screenshot agent
+          "vercel-screenshot/1.0",
+          // Allow generally friendly bots like GoogleBot and DiscordBot. These
+          // have a more complex user agent like "AdsBot-Google
+          // (+https://www.google.com/adsbot.html)" or "Mozilla/5.0 (compatible;
+          // Discordbot/2.0; +https://discordapp.com)" so need multiple patterns
+          "^[a-z.0-9/ \\-_]*bot",
+          "bot($|[/\\);-]+)",
+          "http[s]?://",
+          // Chrome Lighthouse
+          "Chrome-Lighthouse",
+        ],
+      },
     }),
   ],
 });
 
 export const middleware = async (req: NextRequest) => {
-  // Allow whitelisted ASN
-  const asn = req.headers.get("x-vercel-ip-as-number") ?? "";
-  if (whitelistASN.includes(asn)) {
-    return NextResponse.next();
-  }
-
   // Protect from bots and other threats
   const decision = await aj.protect(req);
   if (decision.isDenied()) {
