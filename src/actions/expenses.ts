@@ -1,3 +1,5 @@
+"server only";
+
 import { api } from "@/server/api/hono";
 import { type createExpenseSchema } from "@/types";
 import type * as z from "zod";
