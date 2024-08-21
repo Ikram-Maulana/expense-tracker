@@ -15,7 +15,6 @@ Expense tracker making it simple for you to track and manage your expenses. Easy
 - AuthJS
 - Drizzle
 - LibSQL
-- ARCJet
 
 ## Features
 

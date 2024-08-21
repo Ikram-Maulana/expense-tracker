@@ -15,8 +15,6 @@ export const env = createEnv({
     AUTH_SECRET: z.string(),
     AUTH_GITHUB_ID: z.string(),
     AUTH_GITHUB_SECRET: z.string(),
-    ARCJET_KEY: z.string(),
-    ARCJET_ENV: z.enum(["production", "development"]).optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
